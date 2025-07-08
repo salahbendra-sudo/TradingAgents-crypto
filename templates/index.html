@@ -156,6 +156,87 @@
             transform: rotate(0deg);
         }
         
+        /* Social Media Links */
+        .social-links {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-right: 10px;
+        }
+        
+        .social-link {
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            color: var(--text-primary);
+            font-size: 18px;
+        }
+        
+        .social-link:hover {
+            border-color: var(--border-hover);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px var(--shadow-hover);
+            color: var(--text-primary);
+            text-decoration: none;
+        }
+        
+        .social-link.twitter:hover {
+            background: #1da1f2;
+            border-color: #1da1f2;
+            color: white;
+        }
+        
+        .social-link.github:hover {
+            background: #333;
+            border-color: #333;
+            color: white;
+        }
+        
+        [data-theme="dark"] .social-link.github:hover {
+            background: #f0f6fc;
+            border-color: #f0f6fc;
+            color: #24292f;
+        }
+        
+        .header-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+            
+            .header-title h1 {
+                font-size: 1.5rem;
+            }
+            
+            .header-title p {
+                font-size: 0.8rem;
+            }
+            
+            .social-links {
+                margin-right: 0;
+            }
+            
+            .social-link {
+                width: 40px;
+                height: 40px;
+                font-size: 16px;
+            }
+        }
+        
         .form-section {
             padding: 20px;
             flex: 1;
@@ -361,10 +442,22 @@
                         <h1><i class="fas fa-chart-line"></i> Trading Agents Crypto</h1>
                         <p>Multi-Agent LLM Cryptocurrency Trading Framework</p>
                     </div>
-                    <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
-                        <span class="light-icon">☀️</span>
-                        <span class="dark-icon">🌙</span>
-                    </button>
+                    <div class="header-controls">
+                        <div class="social-links">
+                            <a href="https://x.com/0x0funky/" target="_blank" rel="noopener noreferrer" 
+                               class="social-link twitter" title="Follow on Twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://github.com/0x0funky/TradingAgents-crypto" target="_blank" rel="noopener noreferrer" 
+                               class="social-link github" title="View on GitHub">
+                                <i class="fab fa-github"></i>
+                            </a>
+                        </div>
+                        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle theme">
+                            <span class="light-icon">☀️</span>
+                            <span class="dark-icon">🌙</span>
+                        </button>
+                    </div>
                 </div>
                 <div class="workflow-info">
                     <strong>Workflow:</strong> Analyst Team → Research Team → Trader → Risk Management → Portfolio Management
