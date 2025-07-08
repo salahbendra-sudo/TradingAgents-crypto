@@ -3,14 +3,14 @@ steps:
   - name: 'gcr.io/cloud-builders/docker'
     args: [
       'build', 
-      '-t', 'gcr.io/$PROJECT_ID/tradingagents-crypto:$COMMIT_SHA',
+      '-t', 'gcr.io/$PROJECT_ID/tradingagents-crypto:$BUILD_ID',
       '-t', 'gcr.io/$PROJECT_ID/tradingagents-crypto:latest',
       '.'
     ]
 
   # Push the container image to Container Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/tradingagents-crypto:$COMMIT_SHA']
+    args: ['push', 'gcr.io/$PROJECT_ID/tradingagents-crypto:$BUILD_ID']
 
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'gcr.io/$PROJECT_ID/tradingagents-crypto:latest']
@@ -20,7 +20,7 @@ steps:
     entrypoint: gcloud
     args: [
       'run', 'deploy', 'tradingagents-crypto',
-      '--image', 'gcr.io/$PROJECT_ID/tradingagents-crypto:$COMMIT_SHA',
+      '--image', 'gcr.io/$PROJECT_ID/tradingagents-crypto:latest',
       '--region', 'us-central1',
       '--platform', 'managed',
       '--allow-unauthenticated',
@@ -33,7 +33,7 @@ steps:
     ]
 
 images:
-  - 'gcr.io/$PROJECT_ID/tradingagents-crypto:$COMMIT_SHA'
+  - 'gcr.io/$PROJECT_ID/tradingagents-crypto:$BUILD_ID'
   - 'gcr.io/$PROJECT_ID/tradingagents-crypto:latest'
 
 timeout: '1200s'
