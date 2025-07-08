@@ -548,7 +548,10 @@
                                    placeholder="Backend URL" value="https://api.openai.com/v1" style="margin-top: 12px;">
                             <input type="password" class="form-control" id="api_key" name="api_key" 
                                    placeholder="API Key (required)" required style="margin-top: 12px;">
-                            <small class="form-text text-muted" style="margin-top: 6px;">💾 Saved locally - no need to re-enter</small>
+                            <div class="form-text text-warning" style="margin-top: 6px;">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <strong>Security Notice:</strong> API key stored locally in browser.
+                            </div>
                         </div>
                     </div>
                     
@@ -610,19 +613,38 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // API Key Management
+        // API Key Management (WARNING: localStorage is not secure for production)
         function loadSavedApiKey() {
+            // Security note: localStorage can be accessed by any script on the page
+            // In production, consider session-only storage or server-side session management
             const savedApiKey = localStorage.getItem('tradingAgentsCrypto_apiKey');
-            if (savedApiKey) {
+            if (savedApiKey && isValidApiKeyFormat(savedApiKey)) {
                 document.getElementById('api_key').value = savedApiKey;
             }
         }
         
         function saveApiKey() {
             const apiKey = document.getElementById('api_key').value.trim();
-            if (apiKey) {
+            if (apiKey && isValidApiKeyFormat(apiKey)) {
+                // WARNING: This stores the API key in browser localStorage
+                // Only use this for development/testing purposes
                 localStorage.setItem('tradingAgentsCrypto_apiKey', apiKey);
             }
+        }
+        
+        function isValidApiKeyFormat(apiKey) {
+            // Basic validation to prevent storing obviously invalid keys
+            if (!apiKey || apiKey.length < 10) return false;
+            
+            // Check for common API key patterns
+            const patterns = [
+                /^sk-proj-[a-zA-Z0-9_-]+$/,  // OpenAI project keys
+                /^sk-[a-zA-Z0-9_-]{20,}$/,   // OpenAI keys
+                /^AIza[a-zA-Z0-9_-]{35}$/,   // Google API keys
+                /^ya29\.[a-zA-Z0-9_-]+$/,    // Google OAuth tokens
+            ];
+            
+            return patterns.some(pattern => pattern.test(apiKey));
         }
         
         // Theme Management

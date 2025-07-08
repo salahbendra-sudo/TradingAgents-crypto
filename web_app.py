@@ -6,12 +6,51 @@ import threading
 import time
 from pathlib import Path
 from typing import Dict, List, Optional
+import os
+import re
 
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
 
+# Security utility for safe logging
+def safe_log_config(config: Dict) -> Dict:
+    """Create a safe version of config for logging without sensitive information"""
+    safe_config = config.copy()
+    
+    # Hide all potential sensitive keys
+    sensitive_keys = ['api_key', 'API_KEY', 'openai_api_key', 'anthropic_api_key', 'google_api_key', 'secret_key', 'password']
+    for sensitive_key in sensitive_keys:
+        if sensitive_key in safe_config:
+            safe_config[sensitive_key] = '***HIDDEN***'
+    return safe_config
+
+def safe_error_traceback(traceback_str: str) -> str:
+    """Create a safe version of traceback without sensitive information"""
+    
+    # Replace potential API keys in traceback
+    # Pattern for common API key formats
+    patterns = [
+        r'sk-proj-[a-zA-Z0-9_-]+',  # OpenAI project keys
+        r'sk-[a-zA-Z0-9_-]{20,}',   # OpenAI keys
+        r'AIza[a-zA-Z0-9_-]{35}',   # Google API keys
+        r'ya29\.[a-zA-Z0-9_-]+',    # Google OAuth tokens
+        r'xoxb-[a-zA-Z0-9-]+',      # Slack bot tokens
+        r'[a-zA-Z0-9_-]{32,}',      # Generic long strings that might be keys
+    ]
+    
+    safe_traceback = traceback_str
+    for pattern in patterns:
+        safe_traceback = re.sub(pattern, '***HIDDEN_API_KEY***', safe_traceback)
+    
+    return safe_traceback
+
+def is_production() -> bool:
+    """Check if running in production environment"""
+    return os.environ.get('ENVIRONMENT', '').lower() == 'production'
+
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'tradingagents_secret_key'
+# Use environment variable for SECRET_KEY in production, fallback for development
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'dev-key-change-in-production')
 socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Global storage for analysis sessions
@@ -140,17 +179,13 @@ def run_analysis_background(session_id: str, config: Dict):
     """Run the trading analysis in background thread"""
     import traceback
     try:
-        print(f"[DEBUG] Starting analysis for session {session_id}")
-        print(f"[DEBUG] Config: {config}")
+        if not is_production():
+            print(f"[DEBUG] Starting analysis for session {session_id}")
+            print(f"[DEBUG] Config: {safe_log_config(config)}")
+            print(f"[DEBUG] Selected analysts: {config['analysts']}")
         
         buffer = analysis_sessions[session_id]['buffer']
         buffer.add_message("System", f"Initializing analysis for {config['ticker']}...")
-        
-        print("[DEBUG] Initializing TradingAgentsGraph...")
-        print(f"[DEBUG] DEFAULT_CONFIG keys: {list(DEFAULT_CONFIG.keys())}")
-        print(f"[DEBUG] Selected analysts: {config['analysts']}")
-        
-        print("[DEBUG] Updating configuration...")
         # Update configuration based on user selections
         updated_config = DEFAULT_CONFIG.copy()
         updated_config.update({
@@ -162,7 +197,9 @@ def run_analysis_background(session_id: str, config: Dict):
             'research_depth': config['research_depth'],
             'session_id': session_id  # Add session ID for unique memory collections
         })
-        print(f"[DEBUG] Updated config LLM provider: {updated_config['llm_provider']}")
+        
+        if not is_production():
+            print(f"[DEBUG] LLM provider: {updated_config['llm_provider']}")
         
         # Initialize the graph with correct parameters
         graph = TradingAgentsGraph(
@@ -171,9 +208,10 @@ def run_analysis_background(session_id: str, config: Dict):
             config=updated_config
         )
         buffer.add_message("System", "Graph initialized successfully")
-        print("[DEBUG] Graph initialized successfully")
         
-        print(f"[DEBUG] Creating initial state for {config['ticker']} on {config['analysis_date']}")
+        if not is_production():
+            print("[DEBUG] Graph initialized successfully")
+            print(f"[DEBUG] Creating initial state for {config['ticker']} on {config['analysis_date']}")
         # Create initial state
         init_state = graph.propagator.create_initial_state(
             config['ticker'], 
@@ -284,10 +322,10 @@ def run_analysis_background(session_id: str, config: Dict):
         error_traceback = traceback.format_exc()
         error_message = f"Analysis failed: {type(e).__name__}: {str(e)}"
         print(f"[ERROR] {error_message}")
-        print(f"[ERROR] Traceback:\n{error_traceback}")
+        print(f"[ERROR] Traceback:\n{safe_error_traceback(error_traceback)}")
         
         buffer.add_message("Error", error_message)
-        buffer.add_message("Error", f"Detailed error: {error_traceback}")
+        buffer.add_message("Error", f"Detailed error: {safe_error_traceback(error_traceback)}")
         buffer.update_progress(0, "Analysis failed")
         analysis_sessions[session_id]['status'] = 'failed'
         
@@ -322,7 +360,6 @@ if __name__ == '__main__':
     Path('static').mkdir(exist_ok=True)
     
     # Use port from environment variable for Cloud Run compatibility
-    import os
     port = int(os.environ.get('PORT', 8080))
     
     socketio.run(app, debug=False, host='0.0.0.0', port=port, allow_unsafe_werkzeug=True) 
