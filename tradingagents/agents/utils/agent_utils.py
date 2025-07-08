@@ -417,3 +417,91 @@ class Toolkit:
         )
 
         return openai_fundamentals_results
+
+    # ===== CRYPTO TRADING TOOLS =====
+
+    @staticmethod
+    @tool
+    def get_crypto_market_analysis(
+        symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """
+        Get comprehensive market analysis for a cryptocurrency including current price, market cap, volume, and key metrics.
+        Args:
+            symbol (str): Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+            curr_date (str): Current date in yyyy-mm-dd format
+        Returns:
+            str: Comprehensive market data and analysis for the cryptocurrency
+        """
+        return interface.get_crypto_market_analysis(symbol, curr_date)
+
+    @staticmethod
+    @tool
+    def get_crypto_price_history(
+        symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        look_back_days: Annotated[int, "How many days to look back"] = 30,
+    ) -> str:
+        """
+        Get historical price data for a cryptocurrency over a specified time period.
+        Args:
+            symbol (str): Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+            curr_date (str): Current date in yyyy-mm-dd format
+            look_back_days (int): Number of days to look back, default is 30
+        Returns:
+            str: Historical price, volume, and market cap data
+        """
+        return interface.get_crypto_price_history(symbol, curr_date, look_back_days)
+
+    @staticmethod
+    @tool
+    def get_crypto_technical_analysis(
+        symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        look_back_days: Annotated[int, "How many days to look back"] = 30,
+    ) -> str:
+        """
+        Get technical analysis for a cryptocurrency including trends, support/resistance levels, and momentum indicators.
+        Args:
+            symbol (str): Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+            curr_date (str): Current date in yyyy-mm-dd format
+            look_back_days (int): Number of days to analyze, default is 30
+        Returns:
+            str: Technical analysis including price trends, volume analysis, and key levels
+        """
+        return interface.get_crypto_technical_analysis(symbol, curr_date, look_back_days)
+
+    @staticmethod
+    @tool
+    def get_crypto_news_analysis(
+        symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+        look_back_days: Annotated[int, "How many days to look back"] = 7,
+    ) -> str:
+        """
+        Get recent news and market trends affecting cryptocurrency markets.
+        Args:
+            symbol (str): Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+            curr_date (str): Current date in yyyy-mm-dd format
+            look_back_days (int): Number of days to look back, default is 7
+        Returns:
+            str: News analysis and market trends for cryptocurrency
+        """
+        return interface.get_crypto_news_analysis(symbol, curr_date, look_back_days)
+
+    @staticmethod
+    @tool
+    def get_crypto_fundamentals_analysis(
+        symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+        curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    ) -> str:
+        """
+        Get fundamental analysis for a cryptocurrency including market cap, supply metrics, and tokenomics.
+        Args:
+            symbol (str): Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+            curr_date (str): Current date in yyyy-mm-dd format
+        Returns:
+            str: Fundamental analysis including market metrics, supply data, and crypto-specific fundamentals
+        """
+        return interface.get_crypto_fundamentals_analysis(symbol, curr_date)

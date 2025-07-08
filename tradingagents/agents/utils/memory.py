@@ -9,9 +9,27 @@ class FinancialSituationMemory:
             self.embedding = "nomic-embed-text"
         else:
             self.embedding = "text-embedding-3-small"
-        self.client = OpenAI(base_url=config["backend_url"])
+        self.client = OpenAI(
+            base_url=config["backend_url"],
+            api_key=config["api_key"]
+        )
         self.chroma_client = chromadb.Client(Settings(allow_reset=True))
-        self.situation_collection = self.chroma_client.create_collection(name=name)
+        
+        # Make collection name unique per session to avoid conflicts
+        session_id = config.get('session_id', 'default')
+        unique_name = f"{name}_{session_id}"
+        
+        # Check if collection already exists, if so delete it and create new one
+        try:
+            existing_collections = [col.name for col in self.chroma_client.list_collections()]
+            if unique_name in existing_collections:
+                self.chroma_client.delete_collection(name=unique_name)
+        except Exception as e:
+            # If there's any issue checking/deleting, just continue
+            pass
+        
+        # Create the collection (now guaranteed to be fresh and unique)
+        self.situation_collection = self.chroma_client.create_collection(name=unique_name)
 
     def get_embedding(self, text):
         """Get OpenAI embedding for a text"""

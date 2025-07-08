@@ -1,213 +1,270 @@
-<p align="center">
-  <img src="assets/TauricResearch.png" style="width: 60%; height: auto;">
-</p>
+# Trading Agents Crypto 🚀
 
-<div align="center" style="line-height: 1;">
-  <a href="https://arxiv.org/abs/2412.20138" target="_blank"><img alt="arXiv" src="https://img.shields.io/badge/arXiv-2412.20138-B31B1B?logo=arxiv"/></a>
-  <a href="https://discord.com/invite/hk9PGKShPK" target="_blank"><img alt="Discord" src="https://img.shields.io/badge/Discord-TradingResearch-7289da?logo=discord&logoColor=white&color=7289da"/></a>
-  <a href="./assets/wechat.png" target="_blank"><img alt="WeChat" src="https://img.shields.io/badge/WeChat-TauricResearch-brightgreen?logo=wechat&logoColor=white"/></a>
-  <a href="https://x.com/TauricResearch" target="_blank"><img alt="X Follow" src="https://img.shields.io/badge/X-TauricResearch-white?logo=x&logoColor=white"/></a>
-  <br>
-  <a href="https://github.com/TauricResearch/" target="_blank"><img alt="Community" src="https://img.shields.io/badge/Join_GitHub_Community-TauricResearch-14C290?logo=discourse"/></a>
-</div>
+> **Multi-Agent LLM Cryptocurrency Trading Framework with Web Interface**
 
-<div align="center">
-  <!-- Keep these links. Translations will automatically update with the README. -->
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=de">Deutsch</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=es">Español</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=fr">français</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ja">日本語</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ko">한국어</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=pt">Português</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=ru">Русский</a> | 
-  <a href="https://www.readme-i18n.com/TauricResearch/TradingAgents?lang=zh">中文</a>
-</div>
+A powerful cryptocurrency trading analysis framework powered by multiple specialized AI agents working together to provide comprehensive market insights. This is an enhanced version of [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) with **comprehensive cryptocurrency support**, specialized crypto agents, real-time data integration, and a modern responsive web interface.
 
----
+> 📸 **Check out the [screenshots](#-screenshots)** to see the beautiful light/dark mode interface and real-time dashboard in action!
 
-# TradingAgents: Multi-Agents LLM Financial Trading Framework 
+## ✨ Features
 
-> 🎉 **TradingAgents** officially released! We have received numerous inquiries about the work, and we would like to express our thanks for the enthusiasm in our community.
->
-> So we decided to fully open-source the framework. Looking forward to building impactful projects with you!
+### 🌐 **Modern Web Interface**
+- **Dark/Light Mode**: Eye-friendly themes with smooth transitions *(see screenshots below)*
+- **Real-time Dashboard**: Live updates of agent status and analysis progress
+- **Interactive Forms**: Easy configuration of analysis parameters
+- **Responsive Design**: Works seamlessly on desktop and mobile devices
+- **Professional UI**: Clean, modern design optimized for crypto trading workflows
 
-<div align="center">
-<a href="https://www.star-history.com/#TauricResearch/TradingAgents&Date">
- <picture>
-   <source media="(prefers-color-scheme: dark)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date&theme=dark" />
-   <source media="(prefers-color-scheme: light)" srcset="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" />
-   <img alt="TradingAgents Star History" src="https://api.star-history.com/svg?repos=TauricResearch/TradingAgents&type=Date" style="width: 80%; height: auto;" />
- </picture>
-</a>
-</div>
+### 🤖 **Multi-Agent Architecture**
+- **Analyst Team**: Market, Social, News, and Fundamentals analysis specialists
+- **Research Team**: Bull and Bear researchers with debate-driven insights
+- **Trading Team**: Strategy formulation and risk assessment
+- **Portfolio Management**: Final decision making and trade execution
 
-<div align="center">
+### 💰 **Cryptocurrency Focus**
+- **Native Crypto Support**: Built-in support for popular cryptocurrencies (BTC, ETH, ADA, etc.)
+- **Crypto Market Data**: Real-time price feeds, volume analysis, and market cap tracking
+- **Social Sentiment**: Reddit, Twitter, and crypto community sentiment analysis
+- **News Integration**: Crypto-specific news sources and market impact assessment
+- **Technical Analysis**: Crypto-adapted indicators (RSI, MACD, Bollinger Bands for volatile markets)
+- **On-chain Metrics**: Integration with blockchain data sources
+- **DeFi Analytics**: Decentralized finance protocol analysis and yield farming insights
 
-🚀 [TradingAgents](#tradingagents-framework) | ⚡ [Installation & CLI](#installation-and-cli) | 🎬 [Demo](https://www.youtube.com/watch?v=90gr5lwjIho) | 📦 [Package Usage](#tradingagents-package) | 🤝 [Contributing](#contributing) | 📄 [Citation](#citation)
+### 🧠 **LLM Integration**
+- **Multiple Providers**: Support for OpenAI, Anthropic, and Google models
+- **Latest Models**: Including GPT-4, Claude Sonnet/Opus, and Gemini 2.0/2.5
+- **Quick & Deep Thinking**: Separate models for fast responses and complex analysis
+- **API Key Management**: Secure API key input and management
 
-</div>
+## 🆕 **What's New for Crypto Support**
 
-## TradingAgents Framework
+This fork adds comprehensive cryptocurrency trading capabilities to the original TradingAgents framework:
 
-TradingAgents is a multi-agent trading framework that mirrors the dynamics of real-world trading firms. By deploying specialized LLM-powered agents: from fundamental analysts, sentiment experts, and technical analysts, to trader, risk management team, the platform collaboratively evaluates market conditions and informs trading decisions. Moreover, these agents engage in dynamic discussions to pinpoint the optimal strategy.
+### **Enhanced Data Sources**
+- **CoinGecko API**: Real-time crypto prices, market caps, and volume data
+- **CryptoCompare**: Historical data and social metrics
+- **Crypto News APIs**: Specialized crypto news aggregation
+- **Social Media Integration**: Reddit sentiment analysis for crypto communities
+- **On-chain Data**: Blockchain transaction metrics and wallet analysis
 
-<p align="center">
-  <img src="assets/schema.png" style="width: 100%; height: auto;">
-</p>
+### **Crypto-Specific Agents**
+- **DeFi Analyst**: Specialized in decentralized finance protocols and yield analysis
+- **Tokenomics Analyst**: Token supply, distribution, and economic model analysis
+- **Chain Analyst**: Cross-chain analysis and bridge monitoring
+- **NFT Market Analyst**: Non-fungible token market trends and analysis
 
-> TradingAgents framework is designed for research purposes. Trading performance may vary based on many factors, including the chosen backbone language models, model temperature, trading periods, the quality of data, and other non-deterministic factors. [It is not intended as financial, investment, or trading advice.](https://tauric.ai/disclaimer/)
+### **Market-Adapted Features**
+- **24/7 Trading**: Crypto markets never close - agents adapted for continuous operation
+- **Volatility Management**: Enhanced risk assessment for crypto's high volatility
+- **Multi-Exchange Support**: Analysis across different crypto exchanges
+- **Stablecoin Integration**: USDT, USDC, DAI analysis for portfolio stability
+- **Regulatory Monitoring**: Crypto regulation tracking and impact analysis
 
-Our framework decomposes complex trading tasks into specialized roles. This ensures the system achieves a robust, scalable approach to market analysis and decision-making.
+### **Technical Enhancements**
+- **WebSocket Streams**: Real-time crypto price feeds
+- **Portfolio Rebalancing**: Dynamic crypto portfolio management
+- **Yield Farming Analysis**: DeFi yield opportunity identification
+- **Cross-chain Analytics**: Multi-blockchain analysis capabilities
 
-### Analyst Team
-- Fundamentals Analyst: Evaluates company financials and performance metrics, identifying intrinsic values and potential red flags.
-- Sentiment Analyst: Analyzes social media and public sentiment using sentiment scoring algorithms to gauge short-term market mood.
-- News Analyst: Monitors global news and macroeconomic indicators, interpreting the impact of events on market conditions.
-- Technical Analyst: Utilizes technical indicators (like MACD and RSI) to detect trading patterns and forecast price movements.
+## 📸 Screenshots
 
-<p align="center">
-  <img src="assets/analyst.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
+### **Light Mode Interface**
+![Light Mode Homepage](assets/light_index.png)
+*Clean and professional light mode interface with intuitive crypto analysis configuration*
 
-### Researcher Team
-- Comprises both bullish and bearish researchers who critically assess the insights provided by the Analyst Team. Through structured debates, they balance potential gains against inherent risks.
+### **Dark Mode Interface** 
+![Dark Mode Homepage](assets/dark_index.png)
+*Eye-friendly dark mode perfect for extended trading sessions*
 
-<p align="center">
-  <img src="assets/researcher.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
+### **Real-time Analysis Dashboard**
+![Analysis Dashboard](assets/Dashboard.png)
+*Live dashboard showing multi-agent analysis progress with real-time updates*
 
-### Trader Agent
-- Composes reports from the analysts and researchers to make informed trading decisions. It determines the timing and magnitude of trades based on comprehensive market insights.
+## 🚀 Quick Start
 
-<p align="center">
-  <img src="assets/trader.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
+> **Note**: This crypto-enhanced version includes specialized agents and data sources optimized for cryptocurrency trading analysis.
 
-### Risk Management and Portfolio Manager
-- Continuously evaluates portfolio risk by assessing market volatility, liquidity, and other risk factors. The risk management team evaluates and adjusts trading strategies, providing assessment reports to the Portfolio Manager for final decision.
-- The Portfolio Manager approves/rejects the transaction proposal. If approved, the order will be sent to the simulated exchange and executed.
-
-<p align="center">
-  <img src="assets/risk.png" width="70%" style="display: inline-block; margin: 0 2%;">
-</p>
-
-## Installation and CLI
+### Prerequisites
+- Python 3.8 or higher
+- Node.js (for web dependencies)
+- API keys for your chosen LLM provider
+- FinnHub API key for financial data
+- Optional: CoinGecko API for enhanced crypto data (free tier available)
 
 ### Installation
 
-Clone TradingAgents:
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/trading-agents-crypto.git
+   cd trading-agents-crypto
+   ```
+
+2. **Create virtual environment**
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Set up environment variables**
+   ```bash
+   export FINNHUB_API_KEY=your_finnhub_api_key
+   # Note: LLM API keys are entered via the web interface
+   ```
+
+5. **Run the web application**
+   ```bash
+   python web_app.py
+   ```
+
+6. **Open your browser**
+   Navigate to `http://localhost:5000` to access the web interface
+
+## 🎯 Usage
+
+### Web Interface Workflow
+
+1. **Configure Crypto Analysis**
+   - Enter cryptocurrency symbol (e.g., BTC, ETH, ADA, MATIC, SOL)
+   - Select analysis date
+   - Choose specialized crypto analyst team members
+   - Set research depth level (market conditions, DeFi analysis, etc.)
+   - Configure LLM provider and models
+   - Enter your API key
+
+2. **Start Analysis**
+   - Click "Start Analysis" to begin
+   - Automatically redirected to real-time dashboard
+   - Monitor live progress with visual agent status indicators
+   - View agent status updates and analysis messages as they stream
+
+3. **Review Results**
+   - Examine detailed reports from each specialized agent
+   - Export comprehensive analysis results (HTML format)
+   - Switch between light/dark mode for optimal viewing
+   - Start new analysis with different parameters
+
+### Supported LLM Providers
+
+#### **OpenAI**
+- GPT-4o, GPT-4.1 series
+- o1, o3, o4 reasoning models
+- API endpoint: `https://api.openai.com/v1`
+
+#### **Anthropic**
+- Claude Haiku 3.5, Sonnet 3.5/3.7/4
+- Claude Opus 4 (Deep Thinking)
+- API endpoint: `https://api.anthropic.com/`
+
+#### **Google**
+- Gemini 2.0 Flash-Lite, 2.0 Flash, 2.5 Flash
+- Gemini 2.5 Pro
+- API endpoint: `https://generativelanguage.googleapis.com/v1`
+
+## 🏗️ Architecture
+
+### Agent Workflow
+```
+Analyst Team → Research Team → Trader → Risk Management → Portfolio Management
+```
+
+### Web Technology Stack
+- **Backend**: Flask + SocketIO for real-time communication
+- **Frontend**: Bootstrap 5 + FontAwesome for modern UI
+- **Real-time**: WebSocket connections for live updates
+- **Theme**: Dark/Light mode with CSS variables
+
+## 📊 Analysis Components
+
+### **Analyst Team**
+- 📈 **Market Analyst**: Technical indicators and price patterns
+- 📱 **Social Analyst**: Social media sentiment and trends
+- 📰 **News Analyst**: News events and market impact
+- 📋 **Fundamentals Analyst**: Project fundamentals and metrics
+
+### **Research Team**
+- 🐂 **Bull Researcher**: Optimistic market perspectives
+- 🐻 **Bear Researcher**: Risk assessment and concerns
+- ⚖️ **Research Manager**: Balanced decision coordination
+
+### **Trading Team**
+- 💼 **Trader**: Strategy formulation and timing
+- 🛡️ **Risk Manager**: Risk assessment and mitigation
+- 📊 **Portfolio Manager**: Final execution decisions
+
+## 🔧 Configuration
+
+### Environment Variables
 ```bash
-git clone https://github.com/TauricResearch/TradingAgents.git
-cd TradingAgents
+FINNHUB_API_KEY=your_finnhub_key      # Required for financial data
 ```
 
-Create a virtual environment in any of your favorite environment managers:
-```bash
-conda create -n tradingagents python=3.13
-conda activate tradingagents
-```
+### LLM Configuration
+LLM API keys and model selection are configured through the web interface for security and flexibility.
 
-Install dependencies:
-```bash
-pip install -r requirements.txt
-```
+## 📝 API Documentation
 
-### Required APIs
+### REST Endpoints
+- `GET /` - Main configuration page
+- `GET /analysis` - Analysis dashboard
+- `POST /api/start_analysis` - Start new analysis
 
-You will also need the FinnHub API for financial data. All of our code is implemented with the free tier.
-```bash
-export FINNHUB_API_KEY=$YOUR_FINNHUB_API_KEY
-```
+### WebSocket Events
+- `join_session` - Join analysis session
+- `new_message` - Real-time message updates
+- `agent_status_update` - Agent status changes
+- `progress_update` - Analysis progress updates
 
-You will need the OpenAI API for all the agents.
-```bash
-export OPENAI_API_KEY=$YOUR_OPENAI_API_KEY
-```
+## ⚠️ Disclaimer
 
-### CLI Usage
+This framework is designed for research and educational purposes. Trading performance may vary based on many factors, including model selection, market conditions, and data quality. **This is not financial advice.** Always conduct your own research and consider consulting with financial professionals before making trading decisions.
 
-You can also try out the CLI directly by running:
-```bash
-python -m cli.main
-```
-You will see a screen where you can select your desired tickers, date, LLMs, research depth, etc.
+## 🚧 **Next Features**
 
-<p align="center">
-  <img src="assets/cli/cli_init.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
+We're continuously working to enhance the cryptocurrency trading capabilities. Here's what's coming next:
 
-An interface will appear showing results as they load, letting you track the agent's progress as it runs.
+### **🔗 Enhanced Data Sources**
+- **Binance API Integration**: Direct integration with Binance for real-time order book data
+- **Coinbase Pro API**: Professional trading data and advanced metrics
+- **DeFiPulse Integration**: TVL (Total Value Locked) tracking across DeFi protocols
+- **Messari API**: Comprehensive crypto asset metrics and research data
+- **The Graph Protocol**: Decentralized blockchain data indexing
+- **Dune Analytics**: On-chain analytics and custom dashboard integration
+- **Alternative Data**: Social media influence metrics, GitHub activity, and developer engagement
 
-<p align="center">
-  <img src="assets/cli/cli_news.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
+### **🤖 Optimized Agent Prompts for Multi-Agent Collaboration**
+- **Inter-Agent Communication**: Enhanced protocols for agents to share insights more effectively
+- **Consensus Mechanisms**: Advanced voting and agreement systems between agents
+- **Conflict Resolution**: Automatic handling of contradictory analysis from different agents
+- **Context Sharing**: Improved memory and context passing between agent interactions
+- **Role Specialization**: More granular agent roles with specialized expertise
+- **Dynamic Team Formation**: Adaptive agent team composition based on market conditions
+- **Learning from Interactions**: Agents learn from past collaborative successes and failures
 
-<p align="center">
-  <img src="assets/cli/cli_transaction.png" width="100%" style="display: inline-block; margin: 0 2%;">
-</p>
+### **📊 Advanced Analytics**
+- **Sentiment Heat Maps**: Visual representation of market sentiment across different timeframes
+- **Cross-Asset Correlation**: Analysis of crypto correlations with traditional markets
+- **Liquidity Analysis**: Deep dive into market liquidity and slippage estimation
+- **MEV Analysis**: Maximum Extractable Value opportunities in DeFi
+- **Governance Token Analysis**: DAO proposal and voting impact assessment
 
-## TradingAgents Package
+### **🛠️ Platform Enhancements**
+- **Mobile App**: Native mobile application for iOS and Android
+- **Telegram Bot**: Real-time alerts and analysis via Telegram integration
+- **Portfolio Tracking**: Advanced portfolio management with P&L tracking
+- **Backtesting Engine**: Historical strategy testing and optimization
+- **Paper Trading**: Risk-free strategy testing with simulated trades
 
-### Implementation Details
+## 📄 License
 
-We built TradingAgents with LangGraph to ensure flexibility and modularity. We utilize `o1-preview` and `gpt-4o` as our deep thinking and fast thinking LLMs for our experiments. However, for testing purposes, we recommend you use `o4-mini` and `gpt-4.1-mini` to save on costs as our framework makes **lots of** API calls.
+This project is licensed under the Apache 2.0 License - see the original [TauricResearch/TradingAgents](https://github.com/TauricResearch/TradingAgents) repository for details.
 
-### Python Usage
+## 🙏 Acknowledgments
 
-To use TradingAgents inside your code, you can import the `tradingagents` module and initialize a `TradingAgentsGraph()` object. The `.propagate()` function will return a decision. You can run `main.py`, here's also a quick example:
-
-```python
-from tradingagents.graph.trading_graph import TradingAgentsGraph
-from tradingagents.default_config import DEFAULT_CONFIG
-
-ta = TradingAgentsGraph(debug=True, config=DEFAULT_CONFIG.copy())
-
-# forward propagate
-_, decision = ta.propagate("NVDA", "2024-05-10")
-print(decision)
-```
-
-You can also adjust the default configuration to set your own choice of LLMs, debate rounds, etc.
-
-```python
-from tradingagents.graph.trading_graph import TradingAgentsGraph
-from tradingagents.default_config import DEFAULT_CONFIG
-
-# Create a custom config
-config = DEFAULT_CONFIG.copy()
-config["deep_think_llm"] = "gpt-4.1-nano"  # Use a different model
-config["quick_think_llm"] = "gpt-4.1-nano"  # Use a different model
-config["max_debate_rounds"] = 1  # Increase debate rounds
-config["online_tools"] = True # Use online tools or cached data
-
-# Initialize with custom config
-ta = TradingAgentsGraph(debug=True, config=config)
-
-# forward propagate
-_, decision = ta.propagate("NVDA", "2024-05-10")
-print(decision)
-```
-
-> For `online_tools`, we recommend enabling them for experimentation, as they provide access to real-time data. The agents' offline tools rely on cached data from our **Tauric TradingDB**, a curated dataset we use for backtesting. We're currently in the process of refining this dataset, and we plan to release it soon alongside our upcoming projects. Stay tuned!
-
-You can view the full list of configurations in `tradingagents/default_config.py`.
-
-## Contributing
-
-We welcome contributions from the community! Whether it's fixing a bug, improving documentation, or suggesting a new feature, your input helps make this project better. If you are interested in this line of research, please consider joining our open-source financial AI research community [Tauric Research](https://tauric.ai/).
-
-## Citation
-
-Please reference our work if you find *TradingAgents* provides you with some help :)
-
-```
-@misc{xiao2025tradingagentsmultiagentsllmfinancial,
-      title={TradingAgents: Multi-Agents LLM Financial Trading Framework}, 
-      author={Yijia Xiao and Edward Sun and Di Luo and Wei Wang},
-      year={2025},
-      eprint={2412.20138},
-      archivePrefix={arXiv},
-      primaryClass={q-fin.TR},
-      url={https://arxiv.org/abs/2412.20138}, 
-}
-```
+- Original framework by [TauricResearch](https://github.com/TauricResearch)
+- Built with [LangGraph](https://langchain-ai.github.io/langgraph/) for agent orchestration
+- UI components from [Bootstrap](https://getbootstrap.com/) and [FontAwesome](https://fontawesome.com/)

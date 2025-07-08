@@ -4,6 +4,12 @@ from .yfin_utils import *
 from .stockstats_utils import *
 from .googlenews_utils import *
 from .finnhub_utils import get_data_in_range
+from .coingecko_utils import (
+    get_crypto_price_data,
+    get_crypto_market_data,
+    get_crypto_news,
+    get_crypto_technical_indicators
+)
 from dateutil.relativedelta import relativedelta
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
@@ -704,7 +710,7 @@ def get_YFin_data(
 
 def get_stock_news_openai(ticker, curr_date):
     config = get_config()
-    client = OpenAI(base_url=config["backend_url"])
+    client = OpenAI(base_url=config["backend_url"], api_key=config["api_key"])
 
     response = client.responses.create(
         model=config["quick_think_llm"],
@@ -739,7 +745,7 @@ def get_stock_news_openai(ticker, curr_date):
 
 def get_global_news_openai(curr_date):
     config = get_config()
-    client = OpenAI(base_url=config["backend_url"])
+    client = OpenAI(base_url=config["backend_url"], api_key=config["api_key"])
 
     response = client.responses.create(
         model=config["quick_think_llm"],
@@ -774,7 +780,7 @@ def get_global_news_openai(curr_date):
 
 def get_fundamentals_openai(ticker, curr_date):
     config = get_config()
-    client = OpenAI(base_url=config["backend_url"])
+    client = OpenAI(base_url=config["backend_url"], api_key=config["api_key"])
 
     response = client.responses.create(
         model=config["quick_think_llm"],
@@ -805,3 +811,125 @@ def get_fundamentals_openai(ticker, curr_date):
     )
 
     return response.output[1].content[0].text
+
+
+# ===== CRYPTO TRADING FUNCTIONS =====
+
+def get_crypto_market_analysis(
+    symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+    curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+) -> str:
+    """
+    Get comprehensive market analysis for a cryptocurrency
+    
+    Args:
+        symbol: Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+        curr_date: Current date in yyyy-mm-dd format
+    
+    Returns:
+        String containing market data and analysis
+    """
+    return get_crypto_market_data(symbol)
+
+
+def get_crypto_price_history(
+    symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+    curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    look_back_days: Annotated[int, "How many days to look back"] = 30,
+) -> str:
+    """
+    Get historical price data for a cryptocurrency
+    
+    Args:
+        symbol: Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+        curr_date: Current date in yyyy-mm-dd format
+        look_back_days: Number of days to look back
+    
+    Returns:
+        String containing historical price data
+    """
+    from datetime import datetime, timedelta
+    
+    curr_date_obj = datetime.strptime(curr_date, "%Y-%m-%d")
+    start_date_obj = curr_date_obj - timedelta(days=look_back_days)
+    start_date = start_date_obj.strftime("%Y-%m-%d")
+    
+    return get_crypto_price_data(symbol, start_date, curr_date)
+
+
+def get_crypto_technical_analysis(
+    symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+    curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    look_back_days: Annotated[int, "How many days to look back"] = 30,
+) -> str:
+    """
+    Get technical analysis for a cryptocurrency
+    
+    Args:
+        symbol: Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+        curr_date: Current date in yyyy-mm-dd format
+        look_back_days: Number of days to analyze
+    
+    Returns:
+        String containing technical analysis
+    """
+    return get_crypto_technical_indicators(symbol, curr_date, look_back_days)
+
+
+def get_crypto_news_analysis(
+    symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+    curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+    look_back_days: Annotated[int, "How many days to look back"] = 7,
+) -> str:
+    """
+    Get news and market trends for cryptocurrency
+    
+    Args:
+        symbol: Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+        curr_date: Current date in yyyy-mm-dd format
+        look_back_days: Number of days to look back
+    
+    Returns:
+        String containing news and trends
+    """
+    return get_crypto_news(symbol, curr_date, look_back_days)
+
+
+def get_crypto_fundamentals_analysis(
+    symbol: Annotated[str, "Cryptocurrency symbol like BTC, ETH, ADA"],
+    curr_date: Annotated[str, "Current date in yyyy-mm-dd format"],
+) -> str:
+    """
+    Get fundamental analysis for a cryptocurrency (different from traditional stocks)
+    
+    Args:
+        symbol: Crypto symbol (e.g., 'BTC', 'ETH', 'ADA')
+        curr_date: Current date in yyyy-mm-dd format
+    
+    Returns:
+        String containing fundamental metrics like market cap, supply, etc.
+    """
+    # For crypto, fundamentals include market cap, supply metrics, dominance, etc.
+    market_data = get_crypto_market_data(symbol)
+    
+    # Add some additional context for crypto fundamentals
+    additional_context = f"""
+
+## Cryptocurrency Fundamental Analysis Context for {symbol.upper()}:
+
+**Key Differences from Traditional Stocks:**
+- No earnings reports or P/E ratios
+- Focus on adoption, technology, and network metrics
+- Token economics and supply mechanics are crucial
+- Market sentiment and community strength matter significantly
+
+**Important Metrics to Consider:**
+- Market capitalization and rank
+- Circulating vs total supply
+- Trading volume and liquidity
+- Network activity and adoption
+- Developer activity and updates
+- Regulatory environment and compliance
+"""
+    
+    return market_data + additional_context
