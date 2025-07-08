@@ -9,7 +9,6 @@ from typing import Dict, List, Optional
 
 from tradingagents.graph.trading_graph import TradingAgentsGraph
 from tradingagents.default_config import DEFAULT_CONFIG
-from cli.models import AnalystType
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'tradingagents_secret_key'
@@ -105,6 +104,15 @@ def index():
 @app.route('/analysis')
 def analysis_page():
     return render_template('analysis.html')
+
+@app.route('/health')
+def health_check():
+    """Health check endpoint for Google Cloud Run"""
+    return jsonify({
+        'status': 'healthy', 
+        'timestamp': datetime.datetime.now().isoformat(),
+        'service': 'TradingAgents Crypto'
+    })
 
 @app.route('/api/start_analysis', methods=['POST'])
 def start_analysis():
@@ -313,4 +321,8 @@ if __name__ == '__main__':
     Path('templates').mkdir(exist_ok=True)
     Path('static').mkdir(exist_ok=True)
     
-    socketio.run(app, debug=True, host='0.0.0.0', port=5000) 
+    # Use port from environment variable for Cloud Run compatibility
+    import os
+    port = int(os.environ.get('PORT', 8080))
+    
+    socketio.run(app, debug=False, host='0.0.0.0', port=port, allow_unsafe_werkzeug=True) 
