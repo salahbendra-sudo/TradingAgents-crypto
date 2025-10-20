@@ -29,3 +29,6 @@ Flask==2.3.3
 Flask-SocketIO==5.3.6
 python-socketio==5.8.0
 python-engineio==4.7.1 
+safetensors==0.6.2
+torch==2.9.0+cpu
+transformers==4.57.1
