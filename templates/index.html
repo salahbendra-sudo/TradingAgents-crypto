@@ -824,6 +824,9 @@
             }
             
             // Collect form data
+            const shallowSelect = document.getElementById('shallow_thinker');
+            const deepSelect = document.getElementById('deep_thinker');
+            
             const formData = {
                 ticker: document.getElementById('ticker').value.toUpperCase(),
                 analysis_date: document.getElementById('analysis_date').value,
@@ -832,8 +835,8 @@
                 llm_provider: document.getElementById('llm_provider').value,
                 backend_url: document.getElementById('backend_url').value,
                 api_key: document.getElementById('api_key').value,
-                shallow_thinker: document.getElementById('shallow_thinker').value,
-                deep_thinker: document.getElementById('deep_thinker').value,
+                shallow_thinker: shallowSelect.dataset.customValue || shallowSelect.value,
+                deep_thinker: deepSelect.dataset.customValue || deepSelect.value,
                 session_id: Date.now().toString()
             };
             
@@ -874,7 +877,8 @@
                 'openai': 'https://api.openai.com/v1',
                 'anthropic': 'https://api.anthropic.com/',
                 'google': 'https://generativelanguage.googleapis.com/v1',
-                'deepseek': 'https://api.deepseek.com/v1'
+                'deepseek': 'https://api.deepseek.com/v1',
+                'openrouter': 'https://openrouter.ai/api/v1'
             };
             urlInput.value = urls[provider] || '';
             
@@ -934,6 +938,20 @@
                         {value: 'deepseek-chat', text: 'DeepSeek Chat - Non-thinking mode'},
                         {value: 'deepseek-reasoner', text: 'DeepSeek Reasoner - Thinking mode'}
                     ]
+                },
+                'openrouter': {
+                    shallow: [
+                        {value: 'meta-llama/llama-3.3-8b-instruct:free', text: 'Llama 3.3 8B Instruct (Free) - Fast and capable'},
+                        {value: 'google/gemini-2.0-flash-exp:free', text: 'Gemini 2.0 Flash Exp (Free) - Recommended for analysis'},
+                        {value: 'deepseek/deepseek-chat-v3-0324:free', text: 'DeepSeek Chat v3 (Free) - Strong analytical capabilities'},
+                        {value: 'custom', text: 'Custom Model - Enter your own model ID'}
+                    ],
+                    deep: [
+                        {value: 'deepseek/deepseek-chat-v3-0324:free', text: 'DeepSeek Chat v3 (Free) - Strong analytical capabilities'},
+                        {value: 'google/gemini-2.0-flash-exp:free', text: 'Gemini 2.0 Flash Exp (Free) - Recommended for analysis'},
+                        {value: 'meta-llama/llama-3.3-8b-instruct:free', text: 'Llama 3.3 8B Instruct (Free) - Good alternative'},
+                        {value: 'custom', text: 'Custom Model - Enter your own model ID'}
+                    ]
                 }
             };
             
@@ -952,6 +970,50 @@
                 select.appendChild(optionElement);
             });
         }
+
+        // Handle custom model input
+        function setupCustomModelInputs() {
+            const shallowSelect = document.getElementById('shallow_thinker');
+            const deepSelect = document.getElementById('deep_thinker');
+            
+            function handleCustomSelection(select) {
+                if (select.value === 'custom') {
+                    // Create custom input field
+                    const customInput = document.createElement('input');
+                    customInput.type = 'text';
+                    customInput.className = 'form-control mt-2';
+                    customInput.placeholder = 'Enter custom model ID (e.g., google/gemini-2.0-flash-exp:free)';
+                    customInput.style.display = 'block';
+                    
+                    // Check if custom input already exists
+                    const existingInput = select.parentNode.querySelector('.custom-model-input');
+                    if (existingInput) {
+                        existingInput.remove();
+                    }
+                    
+                    customInput.classList.add('custom-model-input');
+                    select.parentNode.appendChild(customInput);
+                    
+                    // Update select value when custom input changes
+                    customInput.addEventListener('input', function() {
+                        select.dataset.customValue = this.value;
+                    });
+                } else {
+                    // Remove custom input if it exists
+                    const customInput = select.parentNode.querySelector('.custom-model-input');
+                    if (customInput) {
+                        customInput.remove();
+                    }
+                    delete select.dataset.customValue;
+                }
+            }
+            
+            shallowSelect.addEventListener('change', () => handleCustomSelection(shallowSelect));
+            deepSelect.addEventListener('change', () => handleCustomSelection(deepSelect));
+        }
+        
+        // Initialize custom model inputs
+        setupCustomModelInputs();
     </script>
 </body>
 </html> 

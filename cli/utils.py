@@ -169,12 +169,16 @@ def select_shallow_thinking_agent(provider) -> str:
         ]
     }
 
+    # Add custom model option
+    choices = [
+        questionary.Choice(display, value=value)
+        for display, value in SHALLOW_AGENT_OPTIONS[provider.lower()]
+    ]
+    choices.append(questionary.Choice("Custom Model - Enter your own model ID", value="custom"))
+    
     choice = questionary.select(
         "Select Your [Quick-Thinking LLM Engine]:",
-        choices=[
-            questionary.Choice(display, value=value)
-            for display, value in SHALLOW_AGENT_OPTIONS[provider.lower()]
-        ],
+        choices=choices,
         instruction="\n- Use arrow keys to navigate\n- Press Enter to select",
         style=questionary.Style(
             [
@@ -190,6 +194,14 @@ def select_shallow_thinking_agent(provider) -> str:
             "\n[red]No shallow thinking llm engine selected. Exiting...[/red]"
         )
         exit(1)
+    
+    # Handle custom model input
+    if choice == "custom":
+        choice = questionary.text(
+            "Enter custom model ID:",
+            instruction="Example: google/gemini-2.0-flash-exp:free or meta-llama/llama-3.3-8b-instruct:free",
+            validate=lambda text: len(text) > 0 or "Model ID cannot be empty"
+        ).ask()
 
     return choice
 
@@ -245,12 +257,16 @@ def select_deep_thinking_agent(provider) -> str:
         ]
     }
     
+    # Add custom model option
+    choices = [
+        questionary.Choice(display, value=value)
+        for display, value in DEEP_AGENT_OPTIONS[provider.lower()]
+    ]
+    choices.append(questionary.Choice("Custom Model - Enter your own model ID", value="custom"))
+    
     choice = questionary.select(
         "Select Your [Deep-Thinking LLM Engine]:",
-        choices=[
-            questionary.Choice(display, value=value)
-            for display, value in DEEP_AGENT_OPTIONS[provider.lower()]
-        ],
+        choices=choices,
         instruction="\n- Use arrow keys to navigate\n- Press Enter to select",
         style=questionary.Style(
             [
@@ -264,6 +280,14 @@ def select_deep_thinking_agent(provider) -> str:
     if choice is None:
         console.print("\n[red]No deep thinking llm engine selected. Exiting...[/red]")
         exit(1)
+    
+    # Handle custom model input
+    if choice == "custom":
+        choice = questionary.text(
+            "Enter custom model ID:",
+            instruction="Example: deepseek/deepseek-chat-v3-0324:free or google/gemini-2.5-pro-preview-06-05",
+            validate=lambda text: len(text) > 0 or "Model ID cannot be empty"
+        ).ask()
 
     return choice
 
