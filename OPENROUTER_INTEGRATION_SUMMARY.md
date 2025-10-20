@@ -44,6 +44,11 @@ config = {
 **⚠️ Avoid Models with Strict Content Filters:**
 - `meta-llama/llama-4-scout:free` - Has strict moderation that may block financial analysis
 
+**Custom Model Input Support:**
+- **Web Interface**: Select "Custom Model" from dropdown to enter any model ID
+- **CLI**: Choose "Custom Model - Enter your own model ID" option
+- **Flexibility**: Use any OpenRouter model, not just the predefined options
+
 **Important Model ID Notes:**
 - Always use the exact model ID including the `:free` suffix for free models
 - Model IDs are case-sensitive and must match exactly
