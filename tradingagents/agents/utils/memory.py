@@ -12,8 +12,8 @@ class FinancialSituationMemory:
                 base_url=config["backend_url"],
                 api_key=config["api_key"]
             )
-        elif "deepseek" in config.get("llm_provider", "").lower():
-            # DeepSeek doesn't support embeddings, use local model
+        elif "deepseek" in config.get("llm_provider", "").lower() or "openrouter" in config.get("llm_provider", "").lower():
+            # DeepSeek and OpenRouter don't support embeddings, use local model
             self.embedding = "local"
             self.client = None
             self._setup_local_embeddings()
@@ -75,10 +75,21 @@ class FinancialSituationMemory:
                 # Fallback to dummy embeddings if local model failed to load
                 return [0.0] * 384
         
-        response = self.client.embeddings.create(
-            model=self.embedding, input=text
-        )
-        return response.data[0].embedding
+        try:
+            response = self.client.embeddings.create(
+                model=self.embedding, input=text
+            )
+            return response.data[0].embedding
+        except Exception as e:
+            print(f"[WARNING] Failed to get embedding from {self.embedding}: {e}")
+            print(f"[WARNING] Falling back to local embeddings")
+            # Fallback to local embeddings
+            self.embedding = "local"
+            self._setup_local_embeddings()
+            if hasattr(self, 'local_model') and self.local_model is not None:
+                return self._get_local_embedding(text)
+            else:
+                return [0.0] * 384
 
     def _get_local_embedding(self, text):
         """Get embedding using local model"""
