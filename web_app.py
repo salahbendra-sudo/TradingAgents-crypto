@@ -343,6 +343,13 @@ def run_analysis_background(session_id: str, config: Dict):
             error_message += "- `deepseek/deepseek-chat-v3-0324:free`\n"
             error_message += "- `meta-llama/llama-3.3-8b-instruct:free`\n"
             error_message += "\nThese models are less restrictive for financial analysis."
+        elif "BadRequestError" in str(type(e)) or "400" in str(e):
+            error_message = "Invalid model ID. The model you selected may not be available.\n\n"
+            error_message += "**Solution**: Try using one of these verified models:\n"
+            error_message += "- `google/gemini-2.0-flash-exp:free`\n"
+            error_message += "- `deepseek/deepseek-chat-v3-0324:free`\n"
+            error_message += "- `meta-llama/llama-3.3-8b-instruct:free`\n"
+            error_message += "\nMake sure to use the exact model ID including the `:free` suffix if applicable."
         elif "AuthenticationError" in str(type(e)) or "401" in str(e):
             error_message = "Authentication failed. Please check your API key is valid and properly entered."
         else:

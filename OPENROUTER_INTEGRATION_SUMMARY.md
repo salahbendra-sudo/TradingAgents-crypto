@@ -44,6 +44,11 @@ config = {
 **⚠️ Avoid Models with Strict Content Filters:**
 - `meta-llama/llama-4-scout:free` - Has strict moderation that may block financial analysis
 
+**Important Model ID Notes:**
+- Always use the exact model ID including the `:free` suffix for free models
+- Model IDs are case-sensitive and must match exactly
+- Example: `google/gemini-2.0-flash-exp:free` (correct) vs `google/gemini-2.0-flash` (incorrect)
+
 ### CLI Usage
 1. Run the CLI: `python -m cli.main`
 2. Select "Openrouter" as the LLM Provider
