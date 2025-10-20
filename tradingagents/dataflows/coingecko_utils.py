@@ -6,10 +6,11 @@ from datetime import datetime, timedelta
 import time
 from .config import DATA_DIR
 import os
+import threading
 
 
 class CoinGeckoAPI:
-    """CoinGecko API utilities for cryptocurrency data"""
+    """CoinGecko API utilities for cryptocurrency data with rate limiting"""
     
     def __init__(self, api_key: Optional[str] = None):
         self.base_url = "https://api.coingecko.com/api/v3"
@@ -17,6 +18,14 @@ class CoinGeckoAPI:
         self.session = requests.Session()
         if self.api_key:
             self.session.headers.update({"X-Cg-Pro-Api-Key": self.api_key})
+        
+        # Rate limiting configuration
+        self.max_requests_per_minute = 45  # Conservative limit (50 max, leave buffer)
+        self.request_times = []
+        self.lock = threading.Lock()
+        
+        # Cache for coin IDs to avoid repeated API calls
+        self.coin_id_cache = {}
         
         # Direct mapping for major cryptocurrencies to avoid API calls and ambiguity
         self.major_coin_ids = {
@@ -69,28 +78,106 @@ class CoinGeckoAPI:
             'op': 'optimism'
         }
     
-    def _make_request(self, endpoint: str, params: Dict = None) -> Dict:
-        """Make API request with error handling and rate limiting"""
+    def _rate_limit(self):
+        """Implement rate limiting to stay within 50 requests/minute"""
+        with self.lock:
+            current_time = time.time()
+            
+            # Remove requests older than 1 minute
+            self.request_times = [t for t in self.request_times if current_time - t < 60]
+            
+            # If we're at or near the limit, wait
+            if len(self.request_times) >= self.max_requests_per_minute:
+                oldest_request = min(self.request_times)
+                wait_time = 60 - (current_time - oldest_request)
+                if wait_time > 0:
+                    print(f"Rate limit approaching. Waiting {wait_time:.1f} seconds...")
+                    time.sleep(wait_time)
+                    # Update current time after waiting
+                    current_time = time.time()
+            
+            # Add current request time
+            self.request_times.append(current_time)
+    
+    def _cleanup_old_requests(self):
+        """Clean up old request times periodically"""
+        with self.lock:
+            current_time = time.time()
+            self.request_times = [t for t in self.request_times if current_time - t < 120]  # Keep last 2 minutes
+    
+    def get_rate_limit_status(self) -> Dict[str, Any]:
+        """Get current rate limit status"""
+        with self.lock:
+            current_time = time.time()
+            recent_requests = [t for t in self.request_times if current_time - t < 60]
+            
+            return {
+                "requests_last_minute": len(recent_requests),
+                "max_requests_per_minute": self.max_requests_per_minute,
+                "remaining_requests": self.max_requests_per_minute - len(recent_requests),
+                "time_until_reset": 60 - (current_time - min(recent_requests)) if recent_requests else 0
+            }
+    
+    def _make_request(self, endpoint: str, params: Dict = None, max_retries: int = 3) -> Dict:
+        """Make API request with proactive rate limiting and error handling"""
         url = f"{self.base_url}{endpoint}"
-        try:
-            response = self.session.get(url, params=params)
-            if response.status_code == 429:
-                print("Rate limit exceeded. Please wait before making more requests.")
-                time.sleep(2)  # Wait 2 seconds before retrying
-                response = self.session.get(url, params=params)
-            response.raise_for_status()
-            return response.json()
-        except requests.exceptions.RequestException as e:
-            print(f"Error making request to {url}: {e}")
-            return {}
+        
+        # Apply rate limiting before making request
+        self._rate_limit()
+        
+        for attempt in range(max_retries):
+            try:
+                response = self.session.get(url, params=params, timeout=30)
+                
+                if response.status_code == 429:
+                    # Rate limit hit - wait longer and retry
+                    wait_time = (2 ** attempt) + 5  # Exponential backoff + 5 seconds
+                    print(f"Rate limit exceeded. Waiting {wait_time} seconds before retry {attempt + 1}/{max_retries}...")
+                    time.sleep(wait_time)
+                    continue
+                elif response.status_code == 403:
+                    print("API key invalid or missing permissions. Check your CoinGecko API key.")
+                    return {}
+                elif response.status_code >= 500:
+                    print(f"Server error {response.status_code}. Retrying...")
+                    time.sleep(2)
+                    continue
+                    
+                response.raise_for_status()
+                
+                # Clean up old requests periodically
+                if len(self.request_times) % 10 == 0:
+                    self._cleanup_old_requests()
+                    
+                return response.json()
+                
+            except requests.exceptions.Timeout:
+                print(f"Request timeout for {url}. Retry {attempt + 1}/{max_retries}...")
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+                continue
+            except requests.exceptions.RequestException as e:
+                print(f"Error making request to {url}: {e}")
+                if attempt < max_retries - 1:
+                    time.sleep(2)
+                continue
+        
+        print(f"Failed to make request to {url} after {max_retries} attempts")
+        return {}
     
     def get_coin_id(self, symbol: str) -> Optional[str]:
-        """Get CoinGecko coin ID from symbol, prioritizing major cryptocurrencies"""
+        """Get CoinGecko coin ID from symbol, prioritizing major cryptocurrencies and caching"""
         symbol_lower = symbol.lower()
+        
+        # Check cache first
+        if symbol_lower in self.coin_id_cache:
+            return self.coin_id_cache[symbol_lower]
         
         # First, check if it's a major cryptocurrency we know
         if symbol_lower in self.major_coin_ids:
-            return self.major_coin_ids[symbol_lower]
+            coin_id = self.major_coin_ids[symbol_lower]
+            self.coin_id_cache[symbol_lower] = coin_id
+            return coin_id
         
         # Fallback to API call for less common coins
         try:
@@ -101,12 +188,15 @@ class CoinGeckoAPI:
                     matches.append(coin)
             
             if not matches:
+                self.coin_id_cache[symbol_lower] = None
                 return None
             
             # If multiple matches, prefer the one with a more "standard" name
             # This helps avoid meme coins with same symbol
             if len(matches) == 1:
-                return matches[0]["id"]
+                coin_id = matches[0]["id"]
+                self.coin_id_cache[symbol_lower] = coin_id
+                return coin_id
             
             # For multiple matches, try to pick the most legitimate one
             # Usually the original coin has a simpler ID
@@ -114,13 +204,17 @@ class CoinGeckoAPI:
                 coin_id = match["id"]
                 # Prefer shorter, simpler IDs (usually the original coins)
                 if len(coin_id) < 20 and not any(char in coin_id for char in ['2', '3', 'token', 'coin']):
+                    self.coin_id_cache[symbol_lower] = coin_id
                     return coin_id
             
             # If no clear winner, return the first match
-            return matches[0]["id"]
+            coin_id = matches[0]["id"]
+            self.coin_id_cache[symbol_lower] = coin_id
+            return coin_id
             
         except Exception as e:
             print(f"Error getting coin ID for {symbol}: {e}")
+            self.coin_id_cache[symbol_lower] = None
             return None
 
 
