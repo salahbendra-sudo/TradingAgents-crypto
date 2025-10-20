@@ -13,9 +13,10 @@ class FinancialSituationMemory:
                 api_key=config["api_key"]
             )
         elif "deepseek" in config.get("llm_provider", "").lower():
-            # DeepSeek doesn't support embeddings, disable embedding functionality
-            self.embedding = None
+            # DeepSeek doesn't support embeddings, use local model
+            self.embedding = "local"
             self.client = None
+            self._setup_local_embeddings()
         else:
             self.embedding = "text-embedding-3-small"
             self.client = OpenAI(
@@ -40,18 +41,58 @@ class FinancialSituationMemory:
         # Create the collection (now guaranteed to be fresh and unique)
         self.situation_collection = self.chroma_client.create_collection(name=unique_name)
 
+    def _setup_local_embeddings(self):
+        """Setup local embedding model for DeepSeek"""
+        try:
+            from transformers import AutoTokenizer, AutoModel
+            import torch
+            
+            # Use a small, efficient model
+            model_name = 'sentence-transformers/all-MiniLM-L6-v2'
+            self.local_tokenizer = AutoTokenizer.from_pretrained(model_name)
+            self.local_model = AutoModel.from_pretrained(model_name)
+            self.local_torch = torch  # Store torch reference
+            print(f"[DEBUG] Local embedding model loaded: {model_name}")
+        except ImportError:
+            print("[WARNING] transformers not available, falling back to dummy embeddings")
+            self.local_tokenizer = None
+            self.local_model = None
+            self.local_torch = None
+        except Exception as e:
+            print(f"[WARNING] Failed to load local embedding model: {e}")
+            self.local_tokenizer = None
+            self.local_model = None
+            self.local_torch = None
+
     def get_embedding(self, text):
         """Get embedding for a text"""
         
-        if self.embedding is None:
-            # Return a dummy embedding when embeddings are disabled
-            # This allows the system to continue without embeddings
-            return [0.0] * 384  # Return a dummy vector of appropriate size
+        if self.embedding == "local":
+            # Use local embedding model
+            if hasattr(self, 'local_model') and self.local_model is not None:
+                return self._get_local_embedding(text)
+            else:
+                # Fallback to dummy embeddings if local model failed to load
+                return [0.0] * 384
         
         response = self.client.embeddings.create(
             model=self.embedding, input=text
         )
         return response.data[0].embedding
+
+    def _get_local_embedding(self, text):
+        """Get embedding using local model"""
+        try:
+            inputs = self.local_tokenizer(text, return_tensors='pt', padding=True, truncation=True, max_length=512)
+            with self.local_torch.no_grad():
+                outputs = self.local_model(**inputs)
+            # Mean pooling
+            embeddings = outputs.last_hidden_state.mean(dim=1)
+            return embeddings[0].numpy().tolist()
+        except Exception as e:
+            print(f"[WARNING] Error in local embedding: {e}")
+            # Fallback to dummy embeddings
+            return [0.0] * 384
 
     def add_situations(self, situations_and_advice):
         """Add financial situations and their corresponding advice. Parameter is a list of tuples (situation, rec)"""
