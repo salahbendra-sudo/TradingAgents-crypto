@@ -5,14 +5,23 @@ from openai import OpenAI
 
 class FinancialSituationMemory:
     def __init__(self, name, config):
+        # Determine embedding model based on provider
         if config["backend_url"] == "http://localhost:11434/v1":
             self.embedding = "nomic-embed-text"
+            self.client = OpenAI(
+                base_url=config["backend_url"],
+                api_key=config["api_key"]
+            )
+        elif "deepseek" in config.get("llm_provider", "").lower():
+            # DeepSeek doesn't support embeddings, disable embedding functionality
+            self.embedding = None
+            self.client = None
         else:
             self.embedding = "text-embedding-3-small"
-        self.client = OpenAI(
-            base_url=config["backend_url"],
-            api_key=config["api_key"]
-        )
+            self.client = OpenAI(
+                base_url=config["backend_url"],
+                api_key=config["api_key"]
+            )
         self.chroma_client = chromadb.Client(Settings(allow_reset=True))
         
         # Make collection name unique per session to avoid conflicts
@@ -32,7 +41,12 @@ class FinancialSituationMemory:
         self.situation_collection = self.chroma_client.create_collection(name=unique_name)
 
     def get_embedding(self, text):
-        """Get OpenAI embedding for a text"""
+        """Get embedding for a text"""
+        
+        if self.embedding is None:
+            # Return a dummy embedding when embeddings are disabled
+            # This allows the system to continue without embeddings
+            return [0.0] * 384  # Return a dummy vector of appropriate size
         
         response = self.client.embeddings.create(
             model=self.embedding, input=text
