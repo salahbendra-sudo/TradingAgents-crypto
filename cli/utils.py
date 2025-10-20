@@ -154,9 +154,8 @@ def select_shallow_thinking_agent(provider) -> str:
             ("llama3.2 local", "llama3.2"),
         ],
         "deepseek": [
-            ("DeepSeek Chat - Latest chat model", "deepseek-chat"),
-            ("DeepSeek Coder - Code generation model", "deepseek-coder"),
-            ("DeepSeek V2 - Latest version", "deepseek-v2"),
+            ("DeepSeek Chat - Non-thinking mode", "deepseek-chat"),
+            ("DeepSeek Reasoner - Thinking mode", "deepseek-reasoner"),
         ]
     }
 
@@ -221,10 +220,8 @@ def select_deep_thinking_agent(provider) -> str:
             ("qwen3", "qwen3"),
         ],
         "deepseek": [
-            ("DeepSeek Chat - Latest chat model", "deepseek-chat"),
-            ("DeepSeek Coder - Code generation model", "deepseek-coder"),
-            ("DeepSeek V2 - Latest version", "deepseek-v2"),
-            ("DeepSeek V2 R1 - Reasoning model", "deepseek-v2-r1"),
+            ("DeepSeek Chat - Non-thinking mode", "deepseek-chat"),
+            ("DeepSeek Reasoner - Thinking mode", "deepseek-reasoner"),
         ]
     }
     
