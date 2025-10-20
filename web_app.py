@@ -18,7 +18,7 @@ def safe_log_config(config: Dict) -> Dict:
     safe_config = config.copy()
     
     # Hide all potential sensitive keys
-    sensitive_keys = ['api_key', 'API_KEY', 'openai_api_key', 'anthropic_api_key', 'google_api_key', 'secret_key', 'password']
+    sensitive_keys = ['api_key', 'API_KEY', 'openai_api_key', 'anthropic_api_key', 'google_api_key', 'deepseek_api_key', 'secret_key', 'password']
     for sensitive_key in sensitive_keys:
         if sensitive_key in safe_config:
             safe_config[sensitive_key] = '***HIDDEN***'

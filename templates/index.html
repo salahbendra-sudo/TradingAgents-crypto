@@ -543,6 +543,7 @@
                                 <option value="openai">OpenAI</option>
                                 <option value="anthropic">Anthropic</option>
                                 <option value="google">Google</option>
+                                <option value="deepseek">DeepSeek</option>
                             </select>
                             <input type="text" class="form-control" id="backend_url" name="backend_url" 
                                    placeholder="Backend URL" value="https://api.openai.com/v1" style="margin-top: 12px;">
@@ -639,7 +640,7 @@
             // Check for common API key patterns
             const patterns = [
                 /^sk-proj-[a-zA-Z0-9_-]+$/,  // OpenAI project keys
-                /^sk-[a-zA-Z0-9_-]{20,}$/,   // OpenAI keys
+                /^sk-[a-zA-Z0-9_-]{20,}$/,   // OpenAI and DeepSeek keys
                 /^AIza[a-zA-Z0-9_-]{35}$/,   // Google API keys
                 /^ya29\.[a-zA-Z0-9_-]+$/,    // Google OAuth tokens
             ];
@@ -752,7 +753,8 @@
             const urls = {
                 'openai': 'https://api.openai.com/v1',
                 'anthropic': 'https://api.anthropic.com/',
-                'google': 'https://generativelanguage.googleapis.com/v1'
+                'google': 'https://generativelanguage.googleapis.com/v1',
+                'deepseek': 'https://api.deepseek.com/v1'
             };
             urlInput.value = urls[provider] || '';
             
@@ -801,6 +803,19 @@
                         {value: 'gemini-2.0-flash', text: 'Gemini 2.0 Flash - Next generation features, speed, and thinking'},
                         {value: 'gemini-2.5-flash-preview-05-20', text: 'Gemini 2.5 Flash - Adaptive thinking, cost efficiency'},
                         {value: 'gemini-2.5-pro-preview-06-05', text: 'Gemini 2.5 Pro'}
+                    ]
+                },
+                'deepseek': {
+                    shallow: [
+                        {value: 'deepseek-chat', text: 'DeepSeek Chat - General purpose chat model'},
+                        {value: 'deepseek-coder', text: 'DeepSeek Coder - Specialized for code generation'},
+                        {value: 'deepseek-v2', text: 'DeepSeek V2 - Latest version with improved capabilities'}
+                    ],
+                    deep: [
+                        {value: 'deepseek-chat', text: 'DeepSeek Chat - General purpose chat model'},
+                        {value: 'deepseek-coder', text: 'DeepSeek Coder - Specialized for code generation'},
+                        {value: 'deepseek-v2', text: 'DeepSeek V2 - Latest version with improved capabilities'},
+                        {value: 'deepseek-v2-r1', text: 'DeepSeek V2 R1 - Enhanced reasoning model'}
                     ]
                 }
             };
