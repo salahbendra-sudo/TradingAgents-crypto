@@ -188,10 +188,24 @@ def run_analysis_background(session_id: str, config: Dict):
         buffer.add_message("System", f"Initializing analysis for {config['ticker']}...")
         # Update configuration based on user selections
         updated_config = DEFAULT_CONFIG.copy()
+        api_key = config.get('api_key', '')
+        
+        # Validate API key for OpenRouter
+        if config['llm_provider'] == 'openrouter' and not api_key:
+            buffer.add_message("Error", "OpenRouter requires an API key. Please provide your OpenRouter API key.")
+            analysis_sessions[session_id]['status'] = 'failed'
+            return
+        
+        if not is_production():
+            print(f"[DEBUG] API Key present: {bool(api_key)}")
+            if api_key:
+                print(f"[DEBUG] API Key length: {len(api_key)}")
+                print(f"[DEBUG] API Key starts with: {api_key[:8]}...")
+        
         updated_config.update({
             'llm_provider': config['llm_provider'],
             'backend_url': config['backend_url'],
-            'api_key': config.get('api_key', ''),
+            'api_key': api_key,
             'quick_think_llm': config['shallow_thinker'],  # Map shallow_thinker to quick_think_llm
             'deep_think_llm': config['deep_thinker'],      # Map deep_thinker to deep_think_llm
             'research_depth': config['research_depth'],

@@ -60,15 +60,31 @@ class TradingAgentsGraph:
 
         # Initialize LLMs
         if self.config["llm_provider"].lower() == "openai" or self.config["llm_provider"] == "ollama" or self.config["llm_provider"] == "openrouter":
+            # For OpenRouter, we need to add additional headers
+            extra_headers = {}
+            if self.config["llm_provider"] == "openrouter":
+                # OpenRouter requires these headers for proper attribution
+                extra_headers = {
+                    "HTTP-Referer": "https://github.com/salahbendra-sudo/TradingAgents-crypto",
+                    "X-Title": "TradingAgents Crypto"
+                }
+                # Debug logging for OpenRouter configuration
+                print(f"[DEBUG] OpenRouter config - API Key present: {bool(self.config.get('api_key'))}")
+                print(f"[DEBUG] OpenRouter config - Base URL: {self.config.get('backend_url')}")
+                print(f"[DEBUG] OpenRouter config - Deep Thinker: {self.config.get('deep_think_llm')}")
+                print(f"[DEBUG] OpenRouter config - Quick Thinker: {self.config.get('quick_think_llm')}")
+            
             self.deep_thinking_llm = ChatOpenAI(
                 model=self.config["deep_think_llm"], 
                 base_url=self.config["backend_url"],
-                api_key=self.config["api_key"]
+                api_key=self.config["api_key"],
+                default_headers=extra_headers
             )
             self.quick_thinking_llm = ChatOpenAI(
                 model=self.config["quick_think_llm"], 
                 base_url=self.config["backend_url"],
-                api_key=self.config["api_key"]
+                api_key=self.config["api_key"],
+                default_headers=extra_headers
             )
         elif self.config["llm_provider"].lower() == "anthropic":
             self.deep_thinking_llm = ChatAnthropic(
