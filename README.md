@@ -31,8 +31,8 @@ A powerful cryptocurrency trading analysis framework powered by multiple special
 - **DeFi Analytics**: Decentralized finance protocol analysis and yield farming insights
 
 ### 🧠 **LLM Integration**
-- **Multiple Providers**: Support for OpenAI, Anthropic, and Google models
-- **Latest Models**: Including GPT-4, Claude Sonnet/Opus, and Gemini 2.0/2.5
+- **Multiple Providers**: Support for OpenAI, Anthropic, Google, and DeepSeek models
+- **Latest Models**: Including GPT-4, Claude Sonnet/Opus, Gemini 2.0/2.5, and DeepSeek V2
 - **Quick & Deep Thinking**: Separate models for fast responses and complex analysis
 - **API Key Management**: Secure API key input and management
 
@@ -164,6 +164,11 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
 - Gemini 2.0 Flash-Lite, 2.0 Flash, 2.5 Flash
 - Gemini 2.5 Pro
 - API endpoint: `https://generativelanguage.googleapis.com/v1`
+
+#### **DeepSeek**
+- DeepSeek Chat, DeepSeek Coder, DeepSeek V2
+- DeepSeek V2 R1 (Reasoning model)
+- API endpoint: `https://api.deepseek.com/v1`
 
 ## 🏗️ Architecture
 

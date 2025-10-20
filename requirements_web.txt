@@ -9,6 +9,7 @@ langchain-openai
 langchain-experimental
 langchain_anthropic
 langchain-google-genai
+langchain-deepseek
 langgraph
 
 # Data Analysis and Finance
