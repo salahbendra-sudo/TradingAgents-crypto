@@ -544,6 +544,7 @@
                                 <option value="anthropic">Anthropic</option>
                                 <option value="google">Google</option>
                                 <option value="deepseek">DeepSeek</option>
+                                <option value="openrouter">OpenRouter</option>
                             </select>
                             <input type="text" class="form-control" id="backend_url" name="backend_url" 
                                    placeholder="Backend URL" value="https://api.openai.com/v1" style="margin-top: 12px;">
@@ -643,6 +644,7 @@
                 /^sk-[a-zA-Z0-9_-]{20,}$/,   // OpenAI and DeepSeek keys
                 /^AIza[a-zA-Z0-9_-]{35}$/,   // Google API keys
                 /^ya29\.[a-zA-Z0-9_-]+$/,    // Google OAuth tokens
+                /^sk-or-[a-zA-Z0-9_-]+$/,    // OpenRouter keys
             ];
             
             return patterns.some(pattern => pattern.test(apiKey));
@@ -662,15 +664,133 @@
             document.documentElement.setAttribute('data-theme', savedTheme);
         }
         
+        // Update backend URL and model options when provider changes
+        function updateProviderSettings() {
+            const provider = document.getElementById('llm_provider').value;
+            const backendUrl = document.getElementById('backend_url');
+            const shallowThinker = document.getElementById('shallow_thinker');
+            const deepThinker = document.getElementById('deep_thinker');
+            
+            // Update backend URL based on provider
+            const providerUrls = {
+                'openai': 'https://api.openai.com/v1',
+                'anthropic': 'https://api.anthropic.com/',
+                'google': 'https://generativelanguage.googleapis.com/v1',
+                'deepseek': 'https://api.deepseek.com/v1',
+                'openrouter': 'https://openrouter.ai/api/v1'
+            };
+            
+            if (providerUrls[provider]) {
+                backendUrl.value = providerUrls[provider];
+            }
+            
+            // Update model options based on provider
+            const shallowModels = {
+                'openai': [
+                    {name: 'GPT-4o-mini', value: 'gpt-4o-mini'},
+                    {name: 'GPT-4.1-nano', value: 'gpt-4.1-nano'},
+                    {name: 'GPT-4.1-mini', value: 'gpt-4.1-mini'},
+                    {name: 'GPT-4o', value: 'gpt-4o'}
+                ],
+                'anthropic': [
+                    {name: 'Claude 3.5 Haiku', value: 'claude-3-5-haiku-latest'},
+                    {name: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-latest'}
+                ],
+                'google': [
+                    {name: 'Gemini 2.0 Flash-Lite', value: 'gemini-2.0-flash-lite'},
+                    {name: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash'},
+                    {name: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash-preview-05-20'}
+                ],
+                'deepseek': [
+                    {name: 'DeepSeek Chat', value: 'deepseek-chat'},
+                    {name: 'DeepSeek Reasoner', value: 'deepseek-reasoner'}
+                ],
+                'openrouter': [
+                    {name: 'Meta: Llama 4 Scout (Free)', value: 'meta-llama/llama-4-scout:free'},
+                    {name: 'Meta: Llama 3.3 8B Instruct (Free)', value: 'meta-llama/llama-3.3-8b-instruct:free'},
+                    {name: 'Google: Gemini 2.0 Flash Exp (Free)', value: 'google/gemini-2.0-flash-exp:free'},
+                    {name: 'Meta: Llama 3.1 8B Instruct', value: 'meta-llama/llama-3.1-8b-instruct'},
+                    {name: 'Google: Gemini 2.0 Flash', value: 'google/gemini-2.0-flash'},
+                    {name: 'OpenAI: GPT-4o Mini', value: 'openai/gpt-4o-mini'}
+                ]
+            };
+            
+            const deepModels = {
+                'openai': [
+                    {name: 'GPT-4.1-nano', value: 'gpt-4.1-nano'},
+                    {name: 'GPT-4.1-mini', value: 'gpt-4.1-mini'},
+                    {name: 'GPT-4o', value: 'gpt-4o'},
+                    {name: 'o4-mini', value: 'o4-mini'},
+                    {name: 'o3-mini', value: 'o3-mini'},
+                    {name: 'o1', value: 'o1'}
+                ],
+                'anthropic': [
+                    {name: 'Claude 3.5 Haiku', value: 'claude-3-5-haiku-latest'},
+                    {name: 'Claude 3.5 Sonnet', value: 'claude-3-5-sonnet-latest'},
+                    {name: 'Claude 3.7 Sonnet', value: 'claude-3-7-sonnet-latest'},
+                    {name: 'Claude Sonnet 4', value: 'claude-sonnet-4-0'},
+                    {name: 'Claude Opus 4', value: 'claude-opus-4-0'}
+                ],
+                'google': [
+                    {name: 'Gemini 2.0 Flash-Lite', value: 'gemini-2.0-flash-lite'},
+                    {name: 'Gemini 2.0 Flash', value: 'gemini-2.0-flash'},
+                    {name: 'Gemini 2.5 Flash', value: 'gemini-2.5-flash-preview-05-20'},
+                    {name: 'Gemini 2.5 Pro', value: 'gemini-2.5-pro-preview-06-05'}
+                ],
+                'deepseek': [
+                    {name: 'DeepSeek Chat', value: 'deepseek-chat'},
+                    {name: 'DeepSeek Reasoner', value: 'deepseek-reasoner'}
+                ],
+                'openrouter': [
+                    {name: 'DeepSeek V3 (Free)', value: 'deepseek/deepseek-chat-v3-0324:free'},
+                    {name: 'Meta: Llama 3.1 70B Instruct', value: 'meta-llama/llama-3.1-70b-instruct'},
+                    {name: 'Meta: Llama 3.3 70B Instruct', value: 'meta-llama/llama-3.3-70b-instruct'},
+                    {name: 'Google: Gemini 2.0 Flash Thinking', value: 'google/gemini-2.0-flash-thinking-exp:free'},
+                    {name: 'Google: Gemini 2.5 Pro', value: 'google/gemini-2.5-pro-preview-06-05'},
+                    {name: 'Anthropic: Claude 3.5 Sonnet', value: 'anthropic/claude-3.5-sonnet'},
+                    {name: 'OpenAI: GPT-4o', value: 'openai/gpt-4o'},
+                    {name: 'OpenAI: o3-mini', value: 'openai/o3-mini'}
+                ]
+            };
+            
+            // Update shallow thinker options
+            shallowThinker.innerHTML = '';
+            if (shallowModels[provider]) {
+                shallowModels[provider].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.value;
+                    option.textContent = model.name;
+                    shallowThinker.appendChild(option);
+                });
+            }
+            
+            // Update deep thinker options
+            deepThinker.innerHTML = '';
+            if (deepModels[provider]) {
+                deepModels[provider].forEach(model => {
+                    const option = document.createElement('option');
+                    option.value = model.value;
+                    option.textContent = model.name;
+                    deepThinker.appendChild(option);
+                });
+            }
+        }
+        
         // Load saved API key on page load
         document.addEventListener('DOMContentLoaded', function() {
             loadSavedApiKey();
             loadSavedTheme();
+            updateProviderSettings();
         });
         
         // Save API key when user types
         document.getElementById('api_key').addEventListener('input', function() {
             saveApiKey();
+        });
+        
+        // Update settings when provider changes
+        document.getElementById('llm_provider').addEventListener('change', function() {
+            updateProviderSettings();
         });
         
         // Set default date to today

@@ -31,8 +31,8 @@ A powerful cryptocurrency trading analysis framework powered by multiple special
 - **DeFi Analytics**: Decentralized finance protocol analysis and yield farming insights
 
 ### 🧠 **LLM Integration**
-- **Multiple Providers**: Support for OpenAI, Anthropic, Google, and DeepSeek models
-- **Latest Models**: Including GPT-4, Claude Sonnet/Opus, Gemini 2.0/2.5, and DeepSeek V2
+- **Multiple Providers**: Support for OpenAI, Anthropic, Google, DeepSeek, and OpenRouter models
+- **Latest Models**: Including GPT-4, Claude Sonnet/Opus, Gemini 2.0/2.5, DeepSeek V2, and 50+ models via OpenRouter
 - **Quick & Deep Thinking**: Separate models for fast responses and complex analysis
 - **API Key Management**: Secure API key input and management
 
@@ -169,6 +169,13 @@ This fork adds comprehensive cryptocurrency trading capabilities to the original
 - DeepSeek Chat, DeepSeek Coder, DeepSeek V2
 - DeepSeek V2 R1 (Reasoning model)
 - API endpoint: `https://api.deepseek.com/v1`
+
+#### **OpenRouter**
+- **50+ Models**: Access to models from OpenAI, Anthropic, Google, Meta, Mistral, DeepSeek, and more
+- **Free Options**: Llama 4 Scout, Llama 3.3 8B, Gemini 2.0 Flash Exp, DeepSeek V3
+- **Cost-Effective**: Single API for multiple providers with cost comparison
+- API endpoint: `https://openrouter.ai/api/v1`
+- See [OpenRouter Integration Guide](OPENROUTER_INTEGRATION.md) for details
 
 ## 🏗️ Architecture
 
