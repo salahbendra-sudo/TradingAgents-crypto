@@ -192,8 +192,8 @@ def run_analysis_background(session_id: str, config: Dict):
             'llm_provider': config['llm_provider'],
             'backend_url': config['backend_url'],
             'api_key': config.get('api_key', ''),
-            'shallow_thinker': config['shallow_thinker'],
-            'deep_thinker': config['deep_thinker'],
+            'quick_think_llm': config['shallow_thinker'],  # Map shallow_thinker to quick_think_llm
+            'deep_think_llm': config['deep_thinker'],      # Map deep_thinker to deep_think_llm
             'research_depth': config['research_depth'],
             'session_id': session_id  # Add session ID for unique memory collections
         })
