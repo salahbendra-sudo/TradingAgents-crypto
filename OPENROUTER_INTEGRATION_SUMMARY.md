@@ -127,6 +127,31 @@ config = {
 4. **Free Options**: Several high-quality free models available
 5. **Unified Format**: Consistent API format across all models
 
+## Testing
+
+### ✅ **Test Results**
+
+Integration tested successfully:
+- Graph initialization: ✅ SUCCESS
+- Model configuration: ✅ SUCCESS
+- Provider selection: ✅ SUCCESS
+- Memory system with local embeddings: ✅ SUCCESS
+- Authentication with proper headers: ✅ SUCCESS
+
+### 🔐 **Authentication Requirements**
+
+OpenRouter requires:
+1. **Valid API Key**: Get from https://openrouter.ai/keys
+2. **Proper Headers**: Added automatically:
+   - `HTTP-Referer`: https://github.com/salahbendra-sudo/TradingAgents-crypto
+   - `X-Title`: TradingAgents Crypto
+
+### 🚨 **Common Issues & Solutions**
+
+1. **Authentication Error (401)**: Ensure API key is provided and valid
+2. **Embedding Errors**: Fixed - uses local embeddings automatically
+3. **Rate Limits**: Some free models have usage limits
+
 ## Limitations
 
 1. **Rate Limits**: Some free models have usage limits
