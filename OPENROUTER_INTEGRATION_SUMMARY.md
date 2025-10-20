@@ -34,6 +34,16 @@ config = {
 
 ## Usage
 
+### Model Recommendations
+
+**Recommended Models for Financial Analysis:**
+- **`google/gemini-2.0-flash-exp:free`** - Best overall, less restrictive
+- **`deepseek/deepseek-chat-v3-0324:free`** - Strong analytical capabilities
+- **`meta-llama/llama-3.3-8b-instruct:free`** - Good alternative
+
+**⚠️ Avoid Models with Strict Content Filters:**
+- `meta-llama/llama-4-scout:free` - Has strict moderation that may block financial analysis
+
 ### CLI Usage
 1. Run the CLI: `python -m cli.main`
 2. Select "Openrouter" as the LLM Provider
@@ -149,8 +159,10 @@ OpenRouter requires:
 ### 🚨 **Common Issues & Solutions**
 
 1. **Authentication Error (401)**: Ensure API key is provided and valid
-2. **Embedding Errors**: Fixed - uses local embeddings automatically
-3. **Rate Limits**: Some free models have usage limits
+2. **Content Moderation (403)**: Some models (especially Meta's) have strict filters
+   - **Solution**: Use `google/gemini-2.0-flash-exp:free` or `deepseek/deepseek-chat-v3-0324:free`
+3. **Embedding Errors**: Fixed - uses local embeddings automatically
+4. **Rate Limits**: Some free models have usage limits
 
 ## Limitations
 

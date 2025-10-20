@@ -334,12 +334,26 @@ def run_analysis_background(session_id: str, config: Dict):
         
     except Exception as e:
         error_traceback = traceback.format_exc()
-        error_message = f"Analysis failed: {type(e).__name__}: {str(e)}"
+        
+        # Handle specific error types with better user messages
+        if "PermissionDeniedError" in str(type(e)) or "403" in str(e):
+            error_message = "Content moderation blocked the analysis. This model has strict content filters.\n\n"
+            error_message += "**Solution**: Try using a different model like:\n"
+            error_message += "- `google/gemini-2.0-flash-exp:free` (recommended)\n"
+            error_message += "- `deepseek/deepseek-chat-v3-0324:free`\n"
+            error_message += "- `meta-llama/llama-3.3-8b-instruct:free`\n"
+            error_message += "\nThese models are less restrictive for financial analysis."
+        elif "AuthenticationError" in str(type(e)) or "401" in str(e):
+            error_message = "Authentication failed. Please check your API key is valid and properly entered."
+        else:
+            error_message = f"Analysis failed: {type(e).__name__}: {str(e)}"
+        
         print(f"[ERROR] {error_message}")
         print(f"[ERROR] Traceback:\n{safe_error_traceback(error_traceback)}")
         
         buffer.add_message("Error", error_message)
-        buffer.add_message("Error", f"Detailed error: {safe_error_traceback(error_traceback)}")
+        if "PermissionDeniedError" not in str(type(e)):
+            buffer.add_message("Error", f"Detailed error: {safe_error_traceback(error_traceback)}")
         buffer.update_progress(0, "Analysis failed")
         analysis_sessions[session_id]['status'] = 'failed'
         
