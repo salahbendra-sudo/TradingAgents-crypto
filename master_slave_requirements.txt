@@ -1,0 +1,24 @@
+# Master-Slave Architecture Requirements
+# Core dependencies for the Master-Slave trading system
+
+# Python version
+python>=3.8
+
+# Core dependencies
+asyncio
+
+# Optional dependencies for enhanced functionality
+# statistics (built-in)
+# datetime (built-in)
+# typing (built-in)
+# dataclasses (built-in)
+
+# Note: This architecture is designed to work with the existing
+# TradingAgents-crypto dependencies and adds minimal new requirements
+
+# For production deployment, consider adding:
+# - Monitoring tools (Prometheus, Grafana)
+# - Logging (structlog)
+# - Configuration management (pydantic)
+# - Database (SQLAlchemy, Redis)
+# - Message queue (Redis, RabbitMQ)
